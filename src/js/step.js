@@ -258,7 +258,7 @@ export class Step extends Evented {
     }
 
     if (this.target) {
-      this.target.classList.remove('shepherd-enabled', 'shepherd-target');
+      this._updateStepTargetOnHide();
     }
 
     this.trigger('destroy');
@@ -273,7 +273,7 @@ export class Step extends Evented {
     document.body.removeAttribute('data-shepherd-step');
 
     if (this.target) {
-      this.target.classList.remove('shepherd-enabled', 'shepherd-target');
+      this._updateStepTargetOnHide();
     }
 
     if (this.tooltip) {
@@ -362,6 +362,7 @@ export class Step extends Evented {
    * @private
    */
   _show() {
+    this.tour.beforeShowStep(this);
     this.trigger('before-show');
 
     if (!this.el) {
@@ -380,5 +381,14 @@ export class Step extends Evented {
 
     this.tooltip.show();
     this.trigger('show');
+  }
+
+  // 📝 Replaces `unhighlightStepTarget` in em-shep
+  _updateStepTargetOnHide() {
+    if (this.options.highlightClass) {
+      this.target.classList.remove(currentStep.options.highlightClass);
+    }
+
+    this.target.classList.remove('shepherd-enabled', 'shepherd-target');
   }
 }
